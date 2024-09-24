@@ -17,7 +17,7 @@ jobs:
     needs: build
     uses: ministruth/.github/.github/workflows/release.yml@main
     with:
-      prefix: agent
+      prefix: plugin
       cmd: |
         mkdir bin
         mv plugin-linux-x86_64/agent/bin/agent_linux_x64 bin/agent_linux_x64
