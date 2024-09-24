@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    uses: ministruth/.github/workflows/build.yml@main
+    with:
+      prefix: plugin
+      upload: true
+
+  release:
+    needs: build
+    uses: ministruth/.github/workflows/release.yml@main
+    with:
+      prefix: agent
+      cmd: |
+        mkdir bin
+        mv plugin-linux-x86_64/agent/bin/agent_linux_x64 bin/agent_linux_x64
+        mv plugin-linux-i686/agent/bin/agent_linux_x64 bin/agent_linux_x86
+        mv plugin-linux-aarch64/agent/bin/agent_linux_x64 bin/agent_linux_arm64
+        mv plugin-windows-x86_64/agent/bin/agent_windows_x64.exe bin/agent_windows_x64.exe
+        mv plugin-macOS-x86_64/agent/bin/agent_osx_arm64 bin/agent_osx_x64
+        mv plugin-macOS-aarch64/agent/bin/agent_osx_arm64 bin/agent_osx_arm64
+        rm -f */agent/bin/*
+        cp bin/* plugin-linux-x86_64/agent/bin/
+        cp bin/* plugin-linux-i686/agent/bin/
+        cp bin/* plugin-linux-aarch64/agent/bin/
+        cp bin/* plugin-windows-x86_64/agent/bin/
+        cp bin/* plugin-macOS-x86_64/agent/bin/
+        cp bin/* plugin-macOS-aarch64/agent/bin/
+        mv bin/* release/
