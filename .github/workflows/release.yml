@@ -8,14 +8,14 @@ on:
 
 jobs:
   build:
-    uses: ministruth/.github/workflows/build.yml@main
+    uses: ministruth/.github/.github/workflows/build.yml@main
     with:
       prefix: plugin
       upload: true
 
   release:
     needs: build
-    uses: ministruth/.github/workflows/release.yml@main
+    uses: ministruth/.github/.github/workflows/release.yml@main
     with:
       prefix: agent
       cmd: |
