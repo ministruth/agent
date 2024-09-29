@@ -23,6 +23,7 @@ use skynet_api_monitor::{
     Message,
 };
 
+const MAX_MESSAGE_SIZE: u32 = 1024 * 1024 * 128;
 const NONCE_SIZE: usize = 12;
 const PUBLIC_KEY_SIZE: usize = 65;
 const AES256_KEY_SIZE: usize = 32;
@@ -108,6 +109,9 @@ impl Frame {
 
     pub async fn send(&mut self, buf: &[u8]) -> Result<()> {
         let len = buf.len().try_into()?;
+        if len > MAX_MESSAGE_SIZE {
+            return Err(io::Error::from(io::ErrorKind::InvalidData).into());
+        }
         self.stream.write_u32(len).await?;
         self.stream.write_all(buf).await?;
         self.stream.flush().await?;
@@ -127,8 +131,11 @@ impl Frame {
         self.send(&buf).await
     }
 
-    pub async fn read(&mut self) -> Result<Vec<u8>> {
+    pub async fn read(&mut self, limit: u32) -> Result<Vec<u8>> {
         let len = self.len.next(&mut self.stream).await?;
+        if len > limit {
+            return Err(io::Error::from(io::ErrorKind::InvalidData).into());
+        }
         let mut ret = BytesMut::with_capacity(len.try_into()?);
         if self.stream.read_buf(&mut ret).await? == 0 {
             self.len.reset();
@@ -143,7 +150,7 @@ impl Frame {
     /// # Cancel safety
     /// This function is cancellation safe.
     pub async fn read_msg(&mut self) -> Result<Message> {
-        let buf = self.read().await?;
+        let buf = self.read(MAX_MESSAGE_SIZE).await?;
         let nonce = Nonce::from_slice(&buf[0..NONCE_SIZE]);
         let buf = self
             .cipher

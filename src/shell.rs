@@ -36,7 +36,7 @@ impl ShellInstance {
         // safe to detach, terminated when reader closed.
         let token = token.to_owned();
         thread::spawn(move || loop {
-            let mut buffer = [0; 64];
+            let mut buffer = [0; 1024];
             match reader.read(&mut buffer) {
                 Ok(n) => {
                     if n == 0 {

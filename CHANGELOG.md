@@ -1,3 +1,8 @@
+# v0.4.1
+## Changes
+1. Shell buffer size is changed to 1024.
+2. Add message size limit.
+
 # v0.4.0
 ## New features
 Support file transfer and command.
