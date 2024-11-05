@@ -9,24 +9,18 @@ use std::{
     time::Duration,
 };
 
+use actix_cloud::{
+    tokio::{
+        net::{TcpListener, TcpStream},
+        select, spawn,
+        sync::mpsc::{self, unbounded_channel, UnboundedSender},
+        time::sleep,
+    },
+    tracing::{debug, error, info, info_span, warn, Instrument},
+};
 use miniz_oxide::inflate::decompress_to_vec;
 use path_clean::clean;
-use skynet_api::{
-    actix_cloud::{
-        bail,
-        tokio::{
-            net::{TcpListener, TcpStream},
-            select, spawn,
-            sync::mpsc::{self, unbounded_channel, UnboundedSender},
-            time::sleep,
-        },
-    },
-    anyhow,
-};
-use skynet_api::{
-    tracing::{debug, error, info, info_span, warn, Instrument},
-    HyUuid, Result,
-};
+use skynet_api::{anyhow, bail, HyUuid, Result};
 use skynet_api_monitor::{
     ecies::PublicKey, message::Data, CommandKillMessage, CommandReqMessage, FileReqMessage,
     FileRspMessage, HandshakeStatus, InfoMessage, Message, ShellConnectMessage,

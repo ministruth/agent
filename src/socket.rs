@@ -1,22 +1,16 @@
 use std::io;
 
+use actix_cloud::tokio::{
+    io::{AsyncRead, AsyncReadExt, AsyncWriteExt},
+    net::TcpStream,
+};
 use aes_gcm::{
     aead::{Aead, OsRng},
     AeadCore, Aes256Gcm, KeyInit, Nonce,
 };
 use bytes::BytesMut;
 use derivative::Derivative;
-use skynet_api::{
-    actix_cloud::tokio::{
-        io::{AsyncReadExt, AsyncWriteExt},
-        net::TcpStream,
-    },
-    anyhow,
-};
-use skynet_api::{
-    actix_cloud::{bail, tokio::io::AsyncRead},
-    Result,
-};
+use skynet_api::{anyhow, bail, Result};
 use skynet_api_monitor::prost::Message as _;
 use skynet_api_monitor::{
     ecies::{encrypt, PublicKey},

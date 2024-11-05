@@ -3,8 +3,8 @@ use std::{
     thread,
 };
 
+use actix_cloud::tokio::sync::mpsc::UnboundedSender;
 use portable_pty::{native_pty_system, Child, CommandBuilder, PtyPair, PtySize};
-use skynet_api::actix_cloud::tokio::sync::mpsc::UnboundedSender;
 use skynet_api::Result;
 use skynet_api_monitor::{message::Data, ShellOutputMessage};
 

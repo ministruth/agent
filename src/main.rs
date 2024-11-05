@@ -1,10 +1,10 @@
+use actix_cloud::tokio;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use byte_unit::{Byte, UnitType};
 use clap::{command, Args, Parser, Subcommand};
 use client::run;
 use logger::start_logger;
 use sha3::{digest::ExtendableOutput, Shake256};
-use skynet_api::actix_cloud::tokio;
 use skynet_api_monitor::ecies::PublicKey;
 use std::{
     env::consts,

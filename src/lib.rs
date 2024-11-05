@@ -1,6 +1,5 @@
-use skynet_api::{
-    actix_cloud::state::GlobalState, async_trait, create_plugin, plugin::Plugin, Result, Skynet,
-};
+use actix_cloud::{async_trait, state::GlobalState};
+use skynet_api::{create_plugin, plugin::Plugin, Result, Skynet};
 use skynet_api_agent::{Service, ID, VERSION};
 use std::{
     path::PathBuf,
@@ -17,9 +16,9 @@ impl Plugin for Agent {
     fn on_load(
         &self,
         path: PathBuf,
-        mut skynet: Skynet,
-        state: GlobalState,
-    ) -> (Skynet, GlobalState, Result<()>) {
+        mut skynet: Box<Skynet>,
+        state: Box<GlobalState>,
+    ) -> (Box<Skynet>, Box<GlobalState>, Result<()>) {
         let _ = SERVICE.set(Arc::new(Service::new(
             path,
             env!("CARGO_PKG_VERSION").to_owned(),

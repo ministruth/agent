@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use skynet_api::{
-    actix_cloud::logger::{LogItem, Logger, LoggerBuilder, LoggerGuard},
+use actix_cloud::{
+    logger::{LogItem, Logger, LoggerBuilder, LoggerGuard},
     tracing::Level,
 };
 
