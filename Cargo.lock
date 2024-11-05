@@ -3865,9 +3865,9 @@ dependencies = [
 
 [[package]]
 name = "skynet_api_agent"
-version = "0.4.6"
+version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f20a67707956bcdf7bb40f81979067903153a97e72e97bfac4f69d07df3fcba7"
+checksum = "a25234b945ec94a8266ed106c0deaa6e1f57b080a19f72dcdb0f778f041d90d6"
 dependencies = [
  "enum-as-inner",
  "skynet_api",
@@ -3876,9 +3876,9 @@ dependencies = [
 
 [[package]]
 name = "skynet_api_monitor"
-version = "0.4.6"
+version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c51ad5f37d82e652a9016171f706af33a3c3337a652774e0e261dc779636a70"
+checksum = "6d2bca9e0dedb50fb78cccf8167faf6992291a3b8b26c768eab49d62a7995f32"
 dependencies = [
  "actix-cloud",
  "derivative",
