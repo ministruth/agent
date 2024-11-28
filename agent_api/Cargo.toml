@@ -1,0 +1,19 @@
+[package]
+name = "skynet_api_agent"
+version = "0.5.3"
+edition = "2021"
+authors = ["MXWXZ <matrixwxz@gmail.com>"]
+description = "API for Skynet agent plugin."
+license = "GPL-3.0"
+repository = "https://github.com/MXWXZ/skynet"
+keywords = ["framework", "api", "ffi", "plugin"]
+categories = ["api-bindings", "external-ffi-bindings"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_repr = "0.1"
+enum-as-inner = "0.6"
+ffi_rpc = "0.5"
+semver = { version = "1.0", features = ["serde"] }
+
+skynet_api = "0.3"

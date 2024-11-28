@@ -1,35 +1,4 @@
-[package]
-name = "agent"
-version = "0.5.0"
-edition = "2021"
-authors = ["MXWXZ <matrixwxz@gmail.com>"]
-
-[dependencies]
-parking_lot = "0.12"
-clap = { version = "4.5", features = ["derive"] }
-derivative = "2.2"
-sysinfo = "0.32"
-byte-unit = "5.1"
-machine-uid = "0.5"
-sha3 = "0.10"
-hex = "0.4"
-base64 = "0.22"
-crc32fast = "1.4"
-self-replace = "1.5"
-miniz_oxide = "0.8"
-portable-pty = "0.8"
-thiserror = "1.0"
-aes-gcm = "0.10"
-bytes = "1.8"
-subprocess = "0.2"
-path-clean = "1.0"
-
-actix-cloud = { version = "0.4", default-features = false }
-skynet_api_monitor = "0.4"
-skynet_api_agent = "0.4"
-skynet_api = { version = "0.2", features = ["plugin"] }
-
-[lib]
-crate-type = ["cdylib"]
-
 [workspace]
+
+members = ["agent_api", "agent"]
+resolver = "2"

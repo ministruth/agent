@@ -1,4 +1,4 @@
-use std::io;
+use std::{io, mem};
 
 use actix_cloud::tokio::{
     io::{AsyncRead, AsyncReadExt, AsyncWriteExt},
@@ -8,14 +8,11 @@ use aes_gcm::{
     aead::{Aead, OsRng},
     AeadCore, Aes256Gcm, KeyInit, Nonce,
 };
-use bytes::BytesMut;
 use derivative::Derivative;
-use skynet_api::{anyhow, bail, Result};
+use ecies::{encrypt, PublicKey};
+use skynet_api::{anyhow::anyhow, bail, Result};
 use skynet_api_monitor::prost::Message as _;
-use skynet_api_monitor::{
-    ecies::{encrypt, PublicKey},
-    Message,
-};
+use skynet_api_monitor::Message;
 
 const MAX_MESSAGE_SIZE: u32 = 1024 * 1024 * 128;
 const NONCE_SIZE: usize = 12;
@@ -46,27 +43,75 @@ pub enum SocketError {
 #[derivative(Default(new = "true"))]
 struct FrameLen {
     data: [u8; 4],
-    len: usize,
+    consumed: usize,
 }
 
 impl FrameLen {
-    async fn next<R>(&mut self, io: &mut R) -> Result<u32>
+    async fn read<R>(&mut self, io: &mut R) -> Result<u32>
     where
         R: AsyncRead + Unpin,
     {
-        while self.len < 4 {
-            let cnt = io.read(&mut self.data[self.len..]).await?;
+        while self.consumed < 4 {
+            let cnt = match io.read(&mut self.data[self.consumed..]).await {
+                Ok(x) => x,
+                Err(e) => {
+                    self.consumed = 0;
+                    return Err(e.into());
+                }
+            };
             if cnt == 0 {
-                self.len = 0;
+                self.consumed = 0;
                 return Err(io::Error::from(io::ErrorKind::UnexpectedEof).into());
             }
-            self.len += cnt;
+            self.consumed += cnt;
         }
         Ok(u32::from_be_bytes(self.data))
     }
 
     fn reset(&mut self) {
-        self.len = 0;
+        self.consumed = 0;
+    }
+}
+
+#[derive(Derivative)]
+#[derivative(Default(new = "true"))]
+struct FrameData {
+    data: Vec<u8>,
+    len: usize,
+    consumed: usize,
+}
+
+impl FrameData {
+    fn resize(&mut self, len: u32) {
+        let len: usize = len.try_into().unwrap();
+        self.data.resize(len, 0);
+        self.len = len;
+    }
+
+    async fn read<R>(&mut self, io: &mut R) -> Result<()>
+    where
+        R: AsyncRead + Unpin,
+    {
+        while self.consumed < self.len {
+            let cnt = match io.read(&mut self.data[self.consumed..]).await {
+                Ok(x) => x,
+                Err(e) => {
+                    self.consumed = 0;
+                    return Err(e.into());
+                }
+            };
+            if cnt == 0 {
+                self.consumed = 0;
+                return Err(io::Error::from(io::ErrorKind::UnexpectedEof).into());
+            }
+            self.consumed += cnt;
+        }
+        Ok(())
+    }
+
+    fn reset(&mut self) -> Vec<u8> {
+        self.consumed = 0;
+        mem::take(&mut self.data)
     }
 }
 
@@ -75,6 +120,7 @@ pub struct Frame {
     key: [u8; AES256_KEY_SIZE],
     stream: TcpStream,
     cipher: Aes256Gcm,
+    data: FrameData,
     len: FrameLen,
 }
 
@@ -86,6 +132,7 @@ impl Frame {
             stream,
             cipher: Aes256Gcm::new(&key),
             key: key.into(),
+            data: FrameData::new(),
             len: FrameLen::new(),
         }
     }
@@ -126,17 +173,16 @@ impl Frame {
     }
 
     pub async fn read(&mut self, limit: u32) -> Result<Vec<u8>> {
-        let len = self.len.next(&mut self.stream).await?;
+        let len = self.len.read(&mut self.stream).await?;
         if len > limit {
+            self.len.reset();
             return Err(io::Error::from(io::ErrorKind::InvalidData).into());
         }
-        let mut ret = BytesMut::with_capacity(len.try_into()?);
-        if self.stream.read_buf(&mut ret).await? == 0 {
-            self.len.reset();
-            return Err(io::Error::from(io::ErrorKind::UnexpectedEof).into());
-        }
+        self.data.resize(len);
+        let r = self.data.read(&mut self.stream).await;
         self.len.reset();
-        Ok(ret.into())
+        r?;
+        Ok(self.data.reset())
     }
 
     /// Read message from frame.
