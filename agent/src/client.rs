@@ -181,12 +181,12 @@ async fn status_handler(
     data: StatusReqMessage,
 ) -> Result<Option<Result<()>>> {
     state.stat_sys.refresh_specifics(
-        RefreshKind::new()
+        RefreshKind::nothing()
             .with_cpu(CpuRefreshKind::everything())
             .with_memory(MemoryRefreshKind::everything()),
     );
-    state.stat_disk.refresh();
-    state.stat_network.refresh();
+    state.stat_disk.refresh(false);
+    state.stat_network.refresh(false);
     let mut disk_byte = 0;
     let mut total_disk_byte = 0;
     let mut visited_disk = HashSet::new(); // disk name may be duplicated.
