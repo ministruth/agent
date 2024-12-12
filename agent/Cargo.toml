@@ -1,6 +1,6 @@
 [package]
 name = "agent"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 authors = ["MXWXZ <matrixwxz@gmail.com>"]
 
@@ -8,7 +8,7 @@ authors = ["MXWXZ <matrixwxz@gmail.com>"]
 parking_lot = "0.12"
 clap = { version = "4.5", features = ["derive"] }
 derivative = "2.2"
-sysinfo = "0.32"
+sysinfo = "0.33"
 byte-unit = "5.1"
 machine-uid = "0.5"
 sha3 = "0.10"
@@ -29,9 +29,9 @@ ecies = { version = "0.2", default-features = false, features = [
 abi_stable = "0.11"
 
 actix-cloud = { version = "0.4", default-features = false }
-skynet_api_monitor = "0.5"
-skynet_api_agent = { version = "0.5", path = "../agent_api" }
-skynet_api = { version = "0.3", features = ["plugin-api"] }
+skynet_api_monitor = "0.6"
+skynet_api_agent = { version = "0.6", path = "../agent_api" }
+skynet_api = { version = "0.4", features = ["plugin-api"] }
 
 [lib]
 crate-type = ["cdylib"]
