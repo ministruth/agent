@@ -1,6 +1,6 @@
 [package]
 name = "agent"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
 authors = ["MXWXZ <matrixwxz@gmail.com>"]
 
@@ -18,7 +18,7 @@ crc32fast = "1.4"
 self-replace = "1.5"
 miniz_oxide = "0.8"
 portable-pty = "0.8"
-thiserror = "1.0"
+thiserror = "2.0"
 aes-gcm = "0.10"
 subprocess = "0.2"
 path-clean = "1.0"

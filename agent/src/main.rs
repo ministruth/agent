@@ -6,6 +6,7 @@ use client::run;
 use ecies::PublicKey;
 use logger::start_logger;
 use sha3::{digest::ExtendableOutput, Shake256};
+use skynet_api::tracing::warn;
 use std::{
     env::consts,
     fs::{self, create_dir_all},
@@ -60,6 +61,10 @@ pub struct RunArgs {
     /// Status report rate (seconds).
     #[arg(long, default_value = "1")]
     report_rate: u32,
+
+    /// Timeout before disconnect after not receiving any message.
+    #[arg(long, default_value = "30")]
+    timeout: u32,
 
     /// Whether to disable shell feature.
     #[arg(long)]
@@ -168,7 +173,7 @@ async fn main() {
     let cli = Cli::parse();
     let (_, _guard) = start_logger(!cli.quiet, cli.log_json, cli.verbose);
     match cli.command {
-        Commands::Run(args) => {
+        Commands::Run(mut args) => {
             if !args.data.exists() {
                 create_dir_all(&args.data).unwrap();
             }
@@ -190,6 +195,18 @@ async fn main() {
                 .collect();
             for i in &args.interface {
                 assert!(interfaces.contains(i), "Interface name `{i}` not found");
+            }
+            if args.report_rate == 0 {
+                warn!("Status report is disabled");
+                args.timeout = 0;
+            }
+            if args.timeout != 0 {
+                assert!(
+                    args.timeout > args.report_rate,
+                    "`timeout` should be larger than `report_rate`"
+                );
+            } else {
+                warn!("Message timeout is disabled");
             }
             run(args, pubkey).await;
         }

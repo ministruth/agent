@@ -1,8 +1,9 @@
-use std::{io, mem};
+use std::{io, mem, time::Duration};
 
 use actix_cloud::tokio::{
     io::{AsyncRead, AsyncReadExt, AsyncWriteExt},
     net::TcpStream,
+    time::timeout,
 };
 use aes_gcm::{
     aead::{Aead, OsRng},
@@ -144,7 +145,7 @@ impl Frame {
     pub async fn handshake(&mut self, uid: &str) -> Result<()> {
         let mut buf = self.key.to_vec();
         buf.extend(uid.as_bytes());
-        let msg = encrypt(&self.pk, &buf)?;
+        let msg = encrypt(&self.pk, &buf).map_err(|e| anyhow!(e))?;
         self.send(&msg).await
     }
 
@@ -200,5 +201,16 @@ impl Frame {
             bail!(SocketError::InvalidMagicNumber);
         }
         Message::decode(&buf[MAGIC_NUMBER.len()..]).map_err(Into::into)
+    }
+
+    pub async fn read_msg_timeout(&mut self, sec: u32) -> Result<Message> {
+        if sec == 0 {
+            self.read_msg().await
+        } else {
+            match timeout(Duration::from_secs(sec.into()), self.read_msg()).await {
+                Ok(x) => x,
+                Err(_) => Err(anyhow!(SocketError::Reconnect)),
+            }
+        }
     }
 }

@@ -430,7 +430,7 @@ async fn connect(
                         .unwrap_or_else(|e| debug!(error = %e, "Send shell output error"));
                     }
                 },
-                msg = frame.read_msg() => {
+                msg = frame.read_msg_timeout(state.args.timeout) => {
                     let msg = msg?;
                     match handle_msg(&mut frame, &mut state, msg).await {
                         Ok(ret) => {

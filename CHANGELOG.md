@@ -1,3 +1,7 @@
+# v0.7.1
+## Changes
+1. Support active reconnect after timeout.
+
 # v0.7.0
 ## Changes
 1. Update `skynet_api` version.
