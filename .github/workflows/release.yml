@@ -31,7 +31,6 @@ jobs:
         mv plugin-linux-i686/agent/bin/agent_linux_x86 bin/agent_linux_x86
         mv plugin-linux-aarch64/agent/bin/agent_linux_arm64 bin/agent_linux_arm64
         mv plugin-windows-x86_64/agent/bin/agent_windows_x64.exe bin/agent_windows_x64.exe
-        mv plugin-windows-i686/agent/bin/agent_windows_x86.exe bin/agent_windows_x86.exe
         mv plugin-darwin-x86_64/agent/bin/agent_osx_x64 bin/agent_osx_x64
         mv plugin-darwin-aarch64/agent/bin/agent_osx_arm64 bin/agent_osx_arm64
         rm -f */agent/bin/*
@@ -39,7 +38,6 @@ jobs:
         cp bin/* plugin-linux-i686/agent/bin/
         cp bin/* plugin-linux-aarch64/agent/bin/
         cp bin/* plugin-windows-x86_64/agent/bin/
-        cp bin/* plugin-windows-i686/agent/bin/
         cp bin/* plugin-darwin-x86_64/agent/bin/
         cp bin/* plugin-darwin-aarch64/agent/bin/
         mv bin/* release/
