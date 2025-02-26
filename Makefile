@@ -41,6 +41,9 @@ else
 	ifeq ($(UNAME_M),arm64)
 		MACHINE = arm64
 	endif
+	ifeq ($(UNAME_M),aarch64)
+		MACHINE = arm64
+	endif
 	ifeq ($(UNAME_M),arm)
 		MACHINE = arm
 	endif
