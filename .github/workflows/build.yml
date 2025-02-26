@@ -14,3 +14,6 @@ on:
 jobs:
   build:
     uses: ministruth/.github/.github/workflows/build.yml@main
+    with:
+      lib: true
+      bin: true

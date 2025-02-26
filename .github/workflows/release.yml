@@ -12,6 +12,8 @@ jobs:
     with:
       prefix: plugin
       upload: true
+      lib: true
+      bin: true
 
   publish_crate:
     needs: build_plugin
