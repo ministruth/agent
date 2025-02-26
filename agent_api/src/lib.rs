@@ -5,7 +5,7 @@ use ffi_rpc::{
 };
 use semver::Version;
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use skynet_api::{uuid, HyUuid};
+use skynet_api::{HyUuid, uuid};
 use std::{
     fmt::{self, Display},
     path::PathBuf,

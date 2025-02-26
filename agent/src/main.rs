@@ -1,11 +1,11 @@
 use actix_cloud::tokio;
-use base64::{engine::general_purpose::STANDARD, Engine};
+use base64::{Engine, engine::general_purpose::STANDARD};
 use byte_unit::{Byte, UnitType};
-use clap::{command, Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, command};
 use client::run;
 use ecies::PublicKey;
 use logger::start_logger;
-use sha3::{digest::ExtendableOutput, Shake256};
+use sha3::{Shake256, digest::ExtendableOutput};
 use skynet_api::tracing::warn;
 use std::{
     env::consts,

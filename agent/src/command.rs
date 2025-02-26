@@ -1,7 +1,7 @@
 use actix_cloud::tokio::sync::mpsc::UnboundedSender;
 use parking_lot::Mutex;
 use skynet_api::Result;
-use skynet_api_monitor::{message::Data, CommandRspMessage};
+use skynet_api_monitor::{CommandRspMessage, message::Data};
 use std::{
     io::{ErrorKind, Read},
     sync::Arc,

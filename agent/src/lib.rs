@@ -1,6 +1,7 @@
 use std::{path::PathBuf, sync::OnceLock};
 
 use skynet_api::{
+    Skynet,
     ffi_rpc::{
         self,
         abi_stable::prefix_type::PrefixTypeTrait,
@@ -13,7 +14,6 @@ use skynet_api::{
     plugin::{PluginError, PluginStatus, Request, Response},
     request::Router,
     service::SResult,
-    Skynet,
 };
 
 mod service;

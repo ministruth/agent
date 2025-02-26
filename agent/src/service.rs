@@ -3,9 +3,9 @@ use std::{fs, path::PathBuf};
 use skynet_api::ffi_rpc::{
     self, async_trait, bincode, ffi_rpc_macro::plugin_impl_trait, registry::Registry,
 };
-use skynet_api_agent::{semver::Version, Arch, System};
+use skynet_api_agent::{Arch, System, semver::Version};
 
-use crate::{Plugin, PLUGIN_INSTANCE};
+use crate::{PLUGIN_INSTANCE, Plugin};
 
 #[plugin_impl_trait]
 impl skynet_api_agent::Service for Plugin {

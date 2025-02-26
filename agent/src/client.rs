@@ -13,29 +13,29 @@ use actix_cloud::{
     tokio::{
         net::{TcpListener, TcpStream},
         select, spawn,
-        sync::mpsc::{self, unbounded_channel, UnboundedSender},
+        sync::mpsc::{self, UnboundedSender, unbounded_channel},
         time::sleep,
     },
-    tracing::{debug, error, info, info_span, warn, Instrument},
+    tracing::{Instrument, debug, error, info, info_span, warn},
 };
 use ecies::PublicKey;
 use miniz_oxide::inflate::decompress_to_vec;
 use path_clean::clean;
-use skynet_api::{anyhow::anyhow, bail, HyUuid, Result};
+use skynet_api::{HyUuid, Result, anyhow::anyhow, bail};
 use skynet_api_monitor::{
-    message::Data, CommandKillMessage, CommandReqMessage, FileReqMessage, FileRspMessage,
-    HandshakeStatus, InfoMessage, Message, ShellConnectMessage, ShellDisconnectMessage,
-    ShellErrorMessage, ShellInputMessage, ShellResizeMessage, StatusReqMessage, StatusRspMessage,
-    UpdateMessage,
+    CommandKillMessage, CommandReqMessage, FileReqMessage, FileRspMessage, HandshakeStatus,
+    InfoMessage, Message, ShellConnectMessage, ShellDisconnectMessage, ShellErrorMessage,
+    ShellInputMessage, ShellResizeMessage, StatusReqMessage, StatusRspMessage, UpdateMessage,
+    message::Data,
 };
 use sysinfo::{CpuRefreshKind, Disks, MemoryRefreshKind, Networks, RefreshKind, System};
 
 use crate::{
+    RunArgs,
     command::CommandInstance,
     get_uid,
     shell::ShellInstance,
     socket::{Frame, SocketError},
-    RunArgs,
 };
 
 static WAIT_TIME: AtomicU32 = AtomicU32::new(1);

@@ -4,9 +4,9 @@ use std::{
 };
 
 use actix_cloud::tokio::sync::mpsc::UnboundedSender;
-use portable_pty::{native_pty_system, Child, CommandBuilder, PtyPair, PtySize};
+use portable_pty::{Child, CommandBuilder, PtyPair, PtySize, native_pty_system};
 use skynet_api::Result;
-use skynet_api_monitor::{message::Data, ShellOutputMessage};
+use skynet_api_monitor::{ShellOutputMessage, message::Data};
 
 pub struct ShellInstance {
     writer: Box<dyn Write + Send>,
@@ -35,23 +35,25 @@ impl ShellInstance {
 
         // safe to detach, terminated when reader closed.
         let token = token.to_owned();
-        thread::spawn(move || loop {
-            let mut buffer = [0; 1024];
-            match reader.read(&mut buffer) {
-                Ok(n) => {
-                    if n == 0 {
-                        break;
+        thread::spawn(move || {
+            loop {
+                let mut buffer = [0; 1024];
+                match reader.read(&mut buffer) {
+                    Ok(n) => {
+                        if n == 0 {
+                            break;
+                        }
+                        if let Some(x) = &sender {
+                            let _ = x.send(Data::ShellOutput(ShellOutputMessage {
+                                token: Some(token.clone()),
+                                data: buffer[..n].to_vec(),
+                            }));
+                        }
                     }
-                    if let Some(x) = &sender {
-                        let _ = x.send(Data::ShellOutput(ShellOutputMessage {
-                            token: Some(token.clone()),
-                            data: buffer[..n].to_vec(),
-                        }));
-                    }
-                }
-                Err(e) => {
-                    if e.kind() != ErrorKind::Interrupted {
-                        break;
+                    Err(e) => {
+                        if e.kind() != ErrorKind::Interrupted {
+                            break;
+                        }
                     }
                 }
             }
