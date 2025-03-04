@@ -17,3 +17,4 @@ jobs:
     with:
       lib: true
       bin: true
+      musl: true
