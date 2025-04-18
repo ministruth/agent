@@ -1,6 +1,6 @@
 [package]
 name = "agent"
-version = "0.8.1"
+version = "0.9.0"
 edition = "2024"
 authors = ["MXWXZ <matrixwxz@gmail.com>"]
 
@@ -29,9 +29,9 @@ ecies = { version = "0.2", default-features = false, features = [
 abi_stable = "0.11"
 
 actix-cloud = { version = "0.4", default-features = false }
-skynet_api_monitor = "0.7"
-skynet_api_agent = { version = "0.7", path = "../agent_api" }
-skynet_api = { version = "0.5", features = ["plugin-api"] }
+skynet_api_monitor = "0.8"
+skynet_api_agent = { version = "0.8", path = "../agent_api" }
+skynet_api = { version = "0.6", features = ["plugin-api"] }
 
 [lib]
 crate-type = ["cdylib"]

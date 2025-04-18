@@ -1,6 +1,6 @@
 [package]
 name = "skynet_api_agent"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2024"
 authors = ["MXWXZ <matrixwxz@gmail.com>"]
 description = "API for Skynet agent plugin."
@@ -13,7 +13,7 @@ categories = ["api-bindings", "external-ffi-bindings"]
 serde = { version = "1.0", features = ["derive"] }
 serde_repr = "0.1"
 enum-as-inner = "0.6"
-ffi_rpc = "0.5"
+ffi_rpc = "0.6"
 semver = { version = "1.0", features = ["serde"] }
 
-skynet_api = "0.5"
+skynet_api = "0.6"

@@ -1,4 +1,8 @@
-# v0.7.0
+# v0.8.0
+## Changes
+1. Update `skynet_api` version.
+
+# v0.7.1
 ## Changes
 1. Update rust 2024.
 

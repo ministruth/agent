@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 
 use skynet_api::ffi_rpc::{
-    self, async_trait, bincode, ffi_rpc_macro::plugin_impl_trait, registry::Registry,
+    self, async_trait, ffi_rpc_macro::plugin_impl_trait, registry::Registry, rmp_serde,
 };
 use skynet_api_agent::{Arch, System, semver::Version};
 

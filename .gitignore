@@ -5,3 +5,4 @@
 .VSCodeCounter
 .DS_Store
 /data
+.cargo
